@@ -12,7 +12,7 @@ import bson
 import settings
 import logging_mc
 
-logger = logging_mc.get_logger( 'valor' )
+logger = logging_mc.get_logger('valor')
 
 client = pymongo.MongoClient(settings.MONGOHOST, 27017)
 MCDB = client.MCDB
@@ -40,8 +40,8 @@ def find_articles():
         index = requests.get(INDEX_URL).content
         soup = BeautifulSoup(index, "lxml")
         news_index = soup.find(id="block-valor_capa_automatica-central_automatico").find_all('h2')
-        news_urls = news_urls + ['http://www.valor.com.br' + BeautifulSoup(  art.encode('utf8') , "lxml" ).find('a').attrs['href'] for art in news_index]
-    return set(news_urls )
+        news_urls = news_urls + ['http://www.valor.com.br' + BeautifulSoup(art.encode('utf8'),"lxml").find('a').attrs['href'] for art in news_index]
+    return set(news_urls)
 
 def get_published_time(soup):
     """
@@ -60,7 +60,7 @@ def get_published_time(soup):
         return None
     else:
         try:
-            published_time = datetime.datetime.strptime( time_tag.encode('utf8') , '%d/%m/%Y às %Hh%M')
+            published_time = datetime.datetime.strptime(time_tag.encode('utf8'), '%d/%m/%Y às %Hh%M')
         except ValueError:
             logger.error('wrong date extraction')
             return None
@@ -151,7 +151,7 @@ def download_article(url):
     encoding = response.encoding if response.encoding is not None else 'utf8'
     dec_content = response.content.decode(encoding)
     soup = BeautifulSoup(dec_content, "lxml")
-    extractor  = Goose({'use_meta_language': False, 'target_language':'pt'})
+    extractor = Goose({'use_meta_language': False, 'target_language':'pt'})
     news = extractor.extract(url=url)
 
     article['link_content'] = compress_content(dec_content)

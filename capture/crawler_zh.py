@@ -13,7 +13,7 @@ import settings
 import logging_mc
 import re
 
-logger = logging_mc.get_logger( 'ZH' )
+logger = logging_mc.get_logger('ZH')
 
 client = pymongo.MongoClient(settings.MONGOHOST, 27017)
 MCDB = client.MCDB
@@ -37,8 +37,8 @@ def find_articles():
         index = requests.get(INDEX_URL).content
         soup = BeautifulSoup(index, "lxml")
         news_index = soup.find_all(attrs={'class': re.compile(r".*\bmateria-manchete\b.*")})
-        news_urls = news_urls + ['' + BeautifulSoup(  art.encode('utf8') , "lxml" ).find('a').attrs['href'] for art in news_index]
-    return set(news_urls )
+        news_urls = news_urls + ['' + BeautifulSoup(art.encode('utf8'), "lxml").find('a').attrs['href'] for art in news_index]
+    return set(news_urls)
 
 def get_published_time(soup):
     """
